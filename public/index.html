@@ -296,7 +296,13 @@ function hidePaywall(){ document.getElementById('paywallOverlay').classList.remo
 function langGate(){ showPaywall('feature','More languages are available on Starter and Pro plans.'); }
 function selectPlan(plan){ selectedPlan=plan; document.getElementById('planStarter').classList.toggle('selected',plan==='starter'); document.getElementById('planPro').classList.toggle('selected',plan==='pro'); document.getElementById('subscribeBtnLabel').textContent=plan==='pro'?'Subscribe — $19/month':'Subscribe — $7/month'; }
 
-async function redirectToStripe(){ const btn=document.getElementById('subscribeBtn'); btn.disabled=true; document.getElementById('subscribeBtnLabel').innerHTML='<span class="spinner"></span> Redirecting…'; const priceId=selectedPlan==='pro'?STRIPE_PRICE_PRO:STRIPE_PRICE_STARTER, successParam=selectedPlan==='pro'?'pro':'starter'; try{ const stripe=Stripe(STRIPE_KEY),s=getState()||{}; await stripe.redirectToCheckout({lineItems:[{price:priceId,quantity:1}],mode:'subscription',customerEmail:s.email||undefined,successUrl:location.href+'?paid='+successParam,cancelUrl:location.href}); }catch(e){ alert('Stripe not yet configured. Replace STRIPE_KEY, STRIPE_PRICE_STARTER, and STRIPE_PRICE_PRO.'); document.getElementById('subscribeBtnLabel').textContent=selectedPlan==='pro'?'Subscribe — $19/month':'Subscribe — $7/month'; btn.disabled=false; } }
+function redirectToStripe(){
+  const s=getState()||{};
+  const baseUrl = selectedPlan==='pro' ? LEMON_PRO_URL : LEMON_STARTER_URL;
+  setState({...s, tier: selectedPlan});
+  const url = baseUrl + (s.email ? (baseUrl.includes('?') ? '&' : '?') + 'checkout[email]=' + encodeURIComponent(s.email) : '');
+  window.location.href = url;
+}
 
 function initSpeech(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){document.getElementById('noSpeech').style.display='block';return;} recognition=new SR(); recognition.continuous=true; recognition.interimResults=true; recognition.lang=langCodes[currentLang]; let final=''; recognition.onstart=()=>{ isListening=true; document.getElementById('micBtn').classList.add('active'); document.getElementById('micStatus').classList.add('on'); document.getElementById('fearInput').classList.add('listening'); final=document.getElementById('fearInput').value; }; recognition.onresult=e=>{ let interim=''; for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) final+=e.results[i][0].transcript+' '; else interim+=e.results[i][0].transcript; } document.getElementById('fearInput').value=final+interim; }; recognition.onerror=e=>{ stopMic(); if(e.error==='not-allowed') alert('Microphone access denied.'); }; recognition.onend=()=>{ if(isListening) recognition.start(); }; }
 function toggleMic(){ if(!recognition){initSpeech();if(!recognition)return;} isListening?stopMic():startMic(); }
