@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reframe — Speaking Fear Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0d1610;--ink-2:#354039;--ink-3:#7a8c7e;--surface:#fff;--surface-2:#f4faf6;--border:#ddeee2;--border-2:#c0d9c7;--accent:#1a6b38;--accent-2:#2d9155;--accent-bg:#edfaf3;--purple:#5a4abf;--purple-bg:#f0eeff;--amber:#a05a00;--amber-bg:#fff8ee;--red:#b91c3a;--red-bg:#fff0f3;--font:'Inter',system-ui,sans-serif;--display:'DM Serif Display',Georgia,serif}
+html{font-size:16px}
+body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-height:100vh;padding-bottom:4rem}
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.25rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-name{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.nav-right{display:flex;align-items:center;gap:8px}
+.tier-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;border:1px solid}
+.badge-free{color:var(--ink-3);background:var(--surface-2);border-color:var(--border-2)}
+.badge-starter{color:var(--accent);background:var(--accent-bg);border-color:#b2e8cf}
+.badge-pro{color:#7a4f00;background:#fff8ee;border-color:#f5d89a}
+.upgrade-btn{font-size:12px;font-weight:500;color:var(--accent);padding:5px 12px;border:1px solid var(--accent);border-radius:8px;background:none;cursor:pointer;font-family:var(--font);transition:all .15s}
+.upgrade-btn:hover{background:var(--accent);color:#fff}
+.trial-banner{padding:9px 1.5rem;font-size:13px;text-align:center;display:none}
+.banner-amber{background:var(--amber-bg);color:var(--amber);border-bottom:1px solid #f5d89a}
+.banner-red{background:var(--red-bg);color:var(--red);border-bottom:1px solid #f5c0cb}
+.banner-link{font-weight:600;text-decoration:underline;cursor:pointer}
+.lang-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 1.25rem;display:none;gap:6px;flex-wrap:wrap;align-items:center}
+.lang-bar.on{display:flex}
+.lang-label{font-size:12px;color:var(--ink-3);font-weight:500;margin-right:2px}
+.lang-btn{font-size:12px;padding:4px 11px;border-radius:16px;border:1px solid var(--border-2);background:var(--surface-2);color:var(--ink-2);cursor:pointer;font-family:var(--font);transition:all .12s}
+.lang-btn:hover{border-color:var(--accent-2);color:var(--accent)}
+.lang-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lang-btn.locked-lang{opacity:.45;cursor:not-allowed}
+/* SIGNUP */
+.signup-screen{max-width:460px;margin:4rem auto;padding:0 1.5rem;text-align:center}
+.signup-logo{width:56px;height:56px;border-radius:16px;background:var(--accent);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center}
+.signup-screen h1{font-family:var(--display);font-size:2.1rem;color:var(--ink);margin-bottom:.75rem;letter-spacing:-.01em}
+.signup-screen h1 em{font-style:italic;color:var(--accent-2)}
+.signup-screen p{font-size:15px;color:var(--ink-2);line-height:1.65;margin-bottom:1.75rem}
+.trial-perks{list-style:none;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;display:flex;flex-direction:column;gap:11px}
+.trial-perks li{font-size:14px;color:var(--ink-2);display:flex;align-items:center;gap:10px}
+.perk-dot{width:18px;height:18px;border-radius:50%;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:var(--accent)}
+.email-row{display:flex;gap:8px;margin-bottom:10px}
+.email-input{flex:1;height:46px;border:1px solid var(--border-2);border-radius:10px;padding:0 1rem;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--surface);transition:border-color .15s}
+.email-input:focus{outline:none;border-color:var(--accent-2)}
+.email-input::placeholder{color:var(--ink-3)}
+.start-btn{height:46px;padding:0 1.4rem;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.start-btn:hover{opacity:.88}
+.signup-note{font-size:12px;color:var(--ink-3);line-height:1.6}
+.error-inline{font-size:13px;color:var(--red);margin-bottom:8px;display:none}
+/* APP */
+.app-screen{display:none}
+.hero{max-width:680px;margin:2rem auto 0;padding:0 1.5rem;text-align:center}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2);margin-bottom:.6rem}
+.hero h1{font-family:var(--display);font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.15;color:var(--ink);margin-bottom:.6rem}
+.hero h1 em{font-style:italic;color:var(--accent-2)}
+.hero-sub{font-size:15px;color:var(--ink-2);line-height:1.6;max-width:480px;margin:0 auto 1.75rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:680px;margin:0 auto;padding:1.75rem}
+@media(max-width:520px){.card{border-radius:0;border-left:none;border-right:none;padding:1.25rem}}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+.chip{font-size:13px;padding:5px 13px;border-radius:20px;border:1px solid var(--border-2);background:var(--surface-2);color:var(--ink-2);cursor:pointer;font-family:var(--font);transition:all .13s}
+.chip:hover{border-color:var(--accent-2);color:var(--accent);background:var(--accent-bg)}
+.input-wrap{position:relative;margin-bottom:6px}
+textarea{width:100%;min-height:120px;border:1px solid var(--border-2);border-radius:10px;padding:1rem 3rem 1rem 1rem;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--surface-2);resize:vertical;line-height:1.65;transition:border-color .15s;display:block}
+textarea:focus{outline:none;border-color:var(--accent-2);background:var(--surface)}
+textarea::placeholder{color:var(--ink-3)}
+textarea.listening{border-color:var(--red)!important;background:#f8fff9}
+.mic-btn{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid var(--border-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--surface);color:var(--ink-2)}
+.mic-btn:hover{border-color:var(--accent-2);color:var(--accent)}
+.mic-btn.active{background:var(--red);border-color:var(--red);color:#fff;animation:mpulse 1s ease-in-out infinite}
+.mic-btn.locked-mic{opacity:.35;cursor:not-allowed}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(185,28,58,.4)}50%{box-shadow:0 0 0 7px rgba(185,28,58,0)}}
+.mic-status{font-size:12px;color:var(--red);margin-bottom:7px;display:none;align-items:center;gap:6px}
+.mic-status.on{display:flex}
+.mic-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.no-speech{font-size:12px;color:var(--ink-3);background:var(--amber-bg);border:1px solid #f5d89a;border-radius:8px;padding:7px 12px;margin-bottom:9px;display:none}
+.usage-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.usage-label{font-size:12px;color:var(--ink-3)}
+.usage-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:3px;margin:0 10px}
+.usage-bar{height:5px;border-radius:3px;background:var(--accent);transition:width .3s}
+.usage-bar.warn{background:var(--amber)}
+.usage-bar.full{background:var(--red)}
+.go-btn{margin-top:1.25rem;width:100%;height:46px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.go-btn:hover{opacity:.88}
+.go-btn:disabled{opacity:.4;cursor:not-allowed}
+.spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.results{margin-top:1.5rem;display:flex;flex-direction:column;gap:12px}
+.result-card{border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:border-color .15s}
+.result-card:hover{border-color:var(--border-2)}
+.card-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+.ey-green{color:var(--accent)}
+.ey-purple{color:var(--purple)}
+.ey-amber{color:var(--amber)}
+.card-text{font-size:15px;color:var(--ink);line-height:1.7}
+.action-box{margin-top:9px;padding:11px 13px;background:var(--purple-bg);border-radius:8px;font-size:14px;color:var(--ink-2);line-height:1.55;border-left:3px solid var(--purple)}
+.mantra-text{font-family:var(--display);font-size:1.35rem;color:var(--ink);line-height:1.4;font-style:italic}
+.copy-btn{font-size:12px;color:var(--ink-3);background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;font-family:var(--font);transition:all .12s;margin-top:11px;display:inline-block}
+.copy-btn:hover{border-color:var(--border-2);color:var(--ink)}
+.copy-btn.copied{color:var(--accent);border-color:var(--accent)}
+.skel-card{border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-top:12px}
+.skel-line{border-radius:4px;background:var(--border);animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.empty{text-align:center;padding:2rem 1rem;margin-top:1.5rem;color:var(--ink-3);font-size:14px;line-height:1.7;border:1px dashed var(--border-2);border-radius:12px}
+.upgrade-nudge{background:var(--accent-bg);border:1px solid #b2e8cf;border-radius:12px;padding:1.25rem;margin-top:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.nudge-text{font-size:14px;color:var(--accent)}
+.nudge-text strong{font-weight:600}
+.nudge-btn{font-size:13px;font-weight:500;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-family:var(--font);white-space:nowrap}
+/* PAYWALL */
+.paywall-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(13,22,16,.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem}
+.paywall-overlay.show{display:flex}
+.paywall-box{background:var(--surface);border-radius:20px;padding:2rem;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.18);position:relative}
+.paywall-box h2{font-family:var(--display);font-size:1.6rem;color:var(--ink);margin-bottom:.5rem;text-align:center}
+.paywall-sub{font-size:14px;color:var(--ink-2);text-align:center;margin-bottom:1.5rem;line-height:1.5}
+.plans-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.plan-card{border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;transition:all .15s;text-align:center}
+.plan-card:hover{border-color:var(--accent-2)}
+.plan-card.selected{border:2px solid var(--accent)}
+.plan-card-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.plan-card-price{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-bottom:4px}
+.plan-card-price span{font-size:12px;font-weight:400;color:var(--ink-3)}
+.plan-feat{font-size:11px;color:var(--ink-3);line-height:1.5}
+.plan-badge{font-size:10px;background:var(--accent-bg);color:var(--accent);border-radius:10px;padding:1px 7px;display:inline-block;margin-bottom:6px}
+.subscribe-btn{width:100%;height:46px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.subscribe-btn:hover{opacity:.88}
+.subscribe-btn:disabled{opacity:.4;cursor:not-allowed}
+.paywall-note{font-size:12px;color:var(--ink-3);text-align:center;line-height:1.6}
+.paywall-close{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:20px;line-height:1}
+footer{text-align:center;padding:2rem 1rem 0;font-size:12px;color:var(--ink-3)}
+footer a{color:var(--ink-3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo"><svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="8" r="5.5" stroke="#fff" stroke-width="1.5"/><path d="M5.5 8l2 2 3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="nav-name">Reframe</span>
+  </a>
+  <div class="nav-right">
+    <span class="tier-badge badge-free" id="tierBadge" style="display:none"></span>
+    <button class="upgrade-btn" id="upgradeBtn" style="display:none" onclick="showPaywall('upgrade')">Upgrade</button>
+  </div>
+</nav>
+
+<div class="trial-banner" id="trialBanner"></div>
+
+<div class="lang-bar" id="langBar">
+  <span class="lang-label">🌍</span>
+  <button class="lang-btn active" onclick="setLang('en','English',this)">English</button>
+  <button class="lang-btn locked-lang" id="lang-fr" onclick="langGate()" data-name="French">Français</button>
+  <button class="lang-btn locked-lang" id="lang-es" onclick="langGate()" data-name="Spanish">Español</button>
+  <button class="lang-btn locked-lang" id="lang-pt" onclick="langGate()" data-name="Portuguese">Português</button>
+  <button class="lang-btn locked-lang" id="lang-sw" onclick="langGate()" data-name="Swahili">Kiswahili</button>
+  <button class="lang-btn locked-lang" id="lang-ar" onclick="langGate()" data-name="Arabic">العربية</button>
+  <button class="lang-btn locked-lang" id="lang-zh" onclick="langGate()" data-name="Mandarin">中文</button>
+  <button class="lang-btn locked-lang" id="lang-hi" onclick="langGate()" data-name="Hindi">हिन्दी</button>
+</div>
+
+<!-- SIGNUP -->
+<div class="signup-screen" id="signupScreen">
+  <div class="signup-logo"><svg viewBox="0 0 24 24" fill="none" width="28" height="28"><circle cx="12" cy="12" r="8" stroke="#fff" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <h1>Your fear of speaking<br><em>isn't the problem.</em></h1>
+  <p>Speak or type your fear. Get a reframe, action step, and mantra — in your language.</p>
+  <ul class="trial-perks">
+    <li><span class="perk-dot">✓</span>7-day free trial — no credit card needed</li>
+    <li><span class="perk-dot">✓</span>Unlimited reframes during trial</li>
+    <li><span class="perk-dot">✓</span>Voice input + 8 languages on paid plans</li>
+    <li><span class="perk-dot">✓</span>Then from $7/month — cancel anytime</li>
+  </ul>
+  <p class="error-inline" id="signupError"></p>
+  <div class="email-row">
+    <input class="email-input" type="email" id="emailInput" placeholder="your@email.com"/>
+    <button class="start-btn" onclick="startTrial()">Start free trial →</button>
+  </div>
+  <p class="signup-note">No credit card required. We'll remind you 2 days before your trial ends.</p>
+</div>
+
+<!-- APP -->
+<div class="app-screen" id="appScreen">
+  <div class="hero">
+    <p class="hero-eyebrow">Speaking Confidence Tool</p>
+    <h1>Your fear of speaking<br><em>isn't the problem.</em></h1>
+    <p class="hero-sub">Speak or type your fear — get a reframe, action step &amp; mantra instantly.</p>
+  </div>
+  <div style="max-width:680px;margin:1.5rem auto 0;padding:0 1rem">
+  <div class="card">
+    <p class="section-label">Common fears — tap to fill</p>
+    <div class="chips">
+      <span class="chip" onclick="fillFear('I freeze up when all eyes are on me')">Freezing on stage</span>
+      <span class="chip" onclick="fillFear('I\'m terrified of saying something stupid in a meeting')">Saying something stupid</span>
+      <span class="chip" onclick="fillFear('My mind goes blank when I\'m put on the spot')">Going blank</span>
+      <span class="chip" onclick="fillFear('I shake and my voice trembles when I speak publicly')">Shaking voice</span>
+      <span class="chip" onclick="fillFear('I worry people will judge me and think I\'m not smart enough')">Fear of judgement</span>
+      <span class="chip" onclick="fillFear('English is not my first language and I feel embarrassed')">Non-native anxiety</span>
+    </div>
+    <p class="section-label">Your fear <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-3)">— type or tap mic to speak</span></p>
+    <div class="no-speech" id="noSpeech">⚠️ Voice input needs Chrome or Safari.</div>
+    <div class="mic-status" id="micStatus"><span class="mic-dot"></span> Listening… speak your fear</div>
+    <div class="input-wrap">
+      <textarea id="fearInput" maxlength="800" placeholder="e.g. I always panic right before presenting. My heart races and I forget everything I prepared…"></textarea>
+      <button class="mic-btn locked-mic" id="micBtn" title="Voice input — upgrade to unlock">
+        <svg viewBox="0 0 20 20" fill="none" width="17" height="17"><rect x="7" y="2" width="6" height="10" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="usage-row" id="usageRow" style="display:none">
+      <span class="usage-label" id="usageLabel">0 / 3 free reframes used</span>
+      <div class="usage-bar-wrap"><div class="usage-bar" id="usageBar" style="width:0%"></div></div>
+    </div>
+    <button class="go-btn" id="goBtn" onclick="doReframe()"><span id="btnLabel">Reframe my fear ↗</span></button>
+    <div id="output"><div class="empty">Tap a fear above or write your own — your reframe, action step, and mantra will appear here.</div></div>
+  </div>
+  </div>
+</div>
+
+<!-- PAYWALL -->
+<div class="paywall-overlay" id="paywallOverlay">
+  <div class="paywall-box">
+    <button class="paywall-close" onclick="hidePaywall()">×</button>
+    <h2 id="paywallTitle">Unlock full access</h2>
+    <p class="paywall-sub" id="paywallSub">7-day free trial on all plans — no credit card required.</p>
+    <div class="plans-row">
+      <div class="plan-card selected" id="planStarter" onclick="selectPlan('starter')">
+        <div class="plan-badge">Most popular</div>
+        <div class="plan-card-name">Starter</div>
+        <div class="plan-card-price">$7<span>/mo</span></div>
+        <div class="plan-feat">Unlimited · Voice · 8 languages · Email rewriting · Confidence score</div>
+      </div>
+      <div class="plan-card" id="planPro" onclick="selectPlan('pro')">
+        <div class="plan-badge" style="background:#fff8ee;color:#7a4f00">Pro</div>
+        <div class="plan-card-name">Pro</div>
+        <div class="plan-card-price">$19<span>/mo</span></div>
+        <div class="plan-feat">Everything + Interview mode · Executive coaching · History · Weekly report</div>
+      </div>
+    </div>
+    <button class="subscribe-btn" id="subscribeBtn" onclick="redirectToStripe()"><span id="subscribeBtnLabel">Subscribe — $7/month</span></button>
+    <p class="paywall-note">7-day free trial · Cancel anytime · Secured by Stripe</p>
+  </div>
+</div>
+
+<footer><p>© 2025 Reframe · <a href="#">Privacy</a> · <a href="#">Terms</a> · Powered by Claude AI</p></footer>
+
+<script>
+// ── STRIPE CONFIG ─────────────────────────────────────────────────────
+const STRIPE_KEY           = 'pk_test_REPLACE_WITH_YOUR_KEY';
+const STRIPE_PRICE_STARTER = 'price_REPLACE_STARTER_PRICE_ID';
+const STRIPE_PRICE_PRO     = 'price_REPLACE_PRO_PRICE_ID';
+// ─────────────────────────────────────────────────────────────────────
+
+const FREE_LIMIT=3, TRIAL_DAYS=7;
+const langCodes={en:'en-US',fr:'fr-FR',es:'es-ES',pt:'pt-BR',sw:'sw-KE',ar:'ar-SA',zh:'zh-CN',hi:'hi-IN'};
+let currentLang='en', currentLangName='English';
+let loading=false, recognition=null, isListening=false, selectedPlan='starter';
+
+function getState(){ try{return JSON.parse(localStorage.getItem('ref_v4')||'null');}catch(e){return null;} }
+function setState(o){ localStorage.setItem('ref_v4',JSON.stringify(o)); }
+function daysLeft(ts){ return Math.max(0,TRIAL_DAYS-Math.floor((Date.now()-ts)/86400000)); }
+function getTier(){ const s=getState(); if(!s) return 'none'; if(s.tier==='starter') return 'starter'; if(s.tier==='pro') return 'pro'; if(s.trialStart){ return daysLeft(s.trialStart)>0?'trial':'expired'; } return 'none'; }
+function getFreeUsed(){ return parseInt(localStorage.getItem('ref_free_used')||'0'); }
+function incFreeUsed(){ localStorage.setItem('ref_free_used',getFreeUsed()+1); }
+
+function init(){
+  if(new URLSearchParams(location.search).get('paid')==='starter'){ const s=getState()||{}; setState({...s,tier:'starter'}); history.replaceState({},'',location.pathname); }
+  if(new URLSearchParams(location.search).get('paid')==='pro'){ const s=getState()||{}; setState({...s,tier:'pro'}); history.replaceState({},'',location.pathname); }
+  const s=getState(); if(!s){ showSignup(); return; } showApp();
+}
+
+function showSignup(){ document.getElementById('signupScreen').style.display='block'; document.getElementById('appScreen').style.display='none'; document.getElementById('langBar').className='lang-bar'; }
+function showApp(){ document.getElementById('signupScreen').style.display='none'; document.getElementById('appScreen').style.display='block'; document.getElementById('langBar').className='lang-bar on'; updateUI(); initSpeech(); }
+
+function updateUI(){
+  const tier=getTier(), s=getState()||{};
+  const pill=document.getElementById('tierBadge'), btn=document.getElementById('upgradeBtn');
+  pill.style.display='inline-flex';
+  if(tier==='starter'){ pill.textContent='Starter'; pill.className='tier-badge badge-starter'; btn.style.display='none'; unlockVoice(); unlockLangs(); document.getElementById('usageRow').style.display='none'; }
+  else if(tier==='pro'){ pill.textContent='Pro ⭐'; pill.className='tier-badge badge-pro'; btn.style.display='none'; unlockVoice(); unlockLangs(); document.getElementById('usageRow').style.display='none'; }
+  else if(tier==='trial'){ const left=daysLeft(s.trialStart); pill.textContent=left+' day trial'; pill.className='tier-badge badge-starter'; btn.style.display='inline-block'; unlockVoice(); unlockLangs(); document.getElementById('usageRow').style.display='none'; updateBanner(left); }
+  else if(tier==='expired'){ pill.textContent='Trial ended'; pill.className='tier-badge badge-free'; btn.style.display='inline-block'; showBannerMsg('Your trial has ended. <span class="banner-link" onclick="showPaywall(\'expired\')">Subscribe to keep access →</span>','banner-red'); }
+  else { pill.textContent='Free'; pill.className='tier-badge badge-free'; btn.style.display='inline-block'; updateFreeUsage(); }
+}
+
+function updateFreeUsage(){ const used=getFreeUsed(), row=document.getElementById('usageRow'); row.style.display='flex'; document.getElementById('usageLabel').textContent=used+' / '+FREE_LIMIT+' free reframes used'; const pct=Math.min(100,(used/FREE_LIMIT)*100); const bar=document.getElementById('usageBar'); bar.style.width=pct+'%'; bar.className='usage-bar'+(used>=FREE_LIMIT?' full':used>=2?' warn':''); }
+function unlockVoice(){ const btn=document.getElementById('micBtn'); btn.classList.remove('locked-mic'); btn.onclick=function(){ toggleMic(); }; }
+function unlockLangs(){ document.querySelectorAll('.locked-lang').forEach(b=>{ b.classList.remove('locked-lang'); const code=b.id.replace('lang-',''); b.onclick=function(){ setLang(code,b.dataset.name,b); }; }); }
+
+function updateBanner(left){ if(left>TRIAL_DAYS-5){document.getElementById('trialBanner').style.display='none';return;} const msg=left<=0?'Your trial has ended. <span class="banner-link" onclick="showPaywall(\'expired\')">Subscribe now →</span>':left===1?'Last day of your trial. <span class="banner-link" onclick="showPaywall(\'warn\')">Keep access →</span>':left+' days left. <span class="banner-link" onclick="showPaywall(\'warn\')">Subscribe from $7/mo →</span>'; showBannerMsg(msg,left<=2?'banner-red':'banner-amber'); }
+function showBannerMsg(html,cls){ const el=document.getElementById('trialBanner'); el.style.display='block'; el.className='trial-banner '+cls; el.innerHTML=html; }
+
+function startTrial(){ const email=document.getElementById('emailInput').value.trim(), err=document.getElementById('signupError'); if(!email||!email.includes('@')){ err.textContent='Please enter a valid email.'; err.style.display='block'; return; } err.style.display='none'; setState({email,trialStart:Date.now()}); showApp(); }
+
+function showPaywall(reason,msg){ const t=document.getElementById('paywallTitle'), s=document.getElementById('paywallSub'); if(reason==='expired'){t.textContent='Your trial has ended';s.textContent='Subscribe to keep reframing your fears. Unlimited access in 8 languages.';}else if(reason==='feature'){t.textContent='Upgrade to unlock';s.textContent=msg||'This feature is available on paid plans.';}else if(reason==='limit'){t.textContent='Free limit reached';s.textContent='You\'ve used your 3 free reframes. Upgrade for unlimited access.';}else{t.textContent='Unlock full access';s.textContent='7-day free trial — no credit card required to start.';} document.getElementById('paywallOverlay').classList.add('show'); }
+function hidePaywall(){ document.getElementById('paywallOverlay').classList.remove('show'); }
+function langGate(){ showPaywall('feature','More languages are available on Starter and Pro plans.'); }
+function selectPlan(plan){ selectedPlan=plan; document.getElementById('planStarter').classList.toggle('selected',plan==='starter'); document.getElementById('planPro').classList.toggle('selected',plan==='pro'); document.getElementById('subscribeBtnLabel').textContent=plan==='pro'?'Subscribe — $19/month':'Subscribe — $7/month'; }
+
+async function redirectToStripe(){ const btn=document.getElementById('subscribeBtn'); btn.disabled=true; document.getElementById('subscribeBtnLabel').innerHTML='<span class="spinner"></span> Redirecting…'; const priceId=selectedPlan==='pro'?STRIPE_PRICE_PRO:STRIPE_PRICE_STARTER, successParam=selectedPlan==='pro'?'pro':'starter'; try{ const stripe=Stripe(STRIPE_KEY),s=getState()||{}; await stripe.redirectToCheckout({lineItems:[{price:priceId,quantity:1}],mode:'subscription',customerEmail:s.email||undefined,successUrl:location.href+'?paid='+successParam,cancelUrl:location.href}); }catch(e){ alert('Stripe not yet configured. Replace STRIPE_KEY, STRIPE_PRICE_STARTER, and STRIPE_PRICE_PRO.'); document.getElementById('subscribeBtnLabel').textContent=selectedPlan==='pro'?'Subscribe — $19/month':'Subscribe — $7/month'; btn.disabled=false; } }
+
+function initSpeech(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){document.getElementById('noSpeech').style.display='block';return;} recognition=new SR(); recognition.continuous=true; recognition.interimResults=true; recognition.lang=langCodes[currentLang]; let final=''; recognition.onstart=()=>{ isListening=true; document.getElementById('micBtn').classList.add('active'); document.getElementById('micStatus').classList.add('on'); document.getElementById('fearInput').classList.add('listening'); final=document.getElementById('fearInput').value; }; recognition.onresult=e=>{ let interim=''; for(let i=e.resultIndex;i<e.results.length;i++){ if(e.results[i].isFinal) final+=e.results[i][0].transcript+' '; else interim+=e.results[i][0].transcript; } document.getElementById('fearInput').value=final+interim; }; recognition.onerror=e=>{ stopMic(); if(e.error==='not-allowed') alert('Microphone access denied.'); }; recognition.onend=()=>{ if(isListening) recognition.start(); }; }
+function toggleMic(){ if(!recognition){initSpeech();if(!recognition)return;} isListening?stopMic():startMic(); }
+function startMic(){ try{recognition.lang=langCodes[currentLang];recognition.start();}catch(e){} }
+function stopMic(){ isListening=false; try{recognition.stop();}catch(e){} document.getElementById('micBtn').classList.remove('active'); document.getElementById('micStatus').classList.remove('on'); document.getElementById('fearInput').classList.remove('listening'); }
+
+function setLang(code,name,el){ currentLang=code; currentLangName=name; document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); if(recognition) recognition.lang=langCodes[code]; }
+function fillFear(text){ document.getElementById('fearInput').value=text; document.getElementById('fearInput').focus(); }
+
+async function doReframe(){
+  const tier=getTier();
+  if(tier==='expired'){showPaywall('expired');return;}
+  if((tier==='free'||tier==='none')&&getFreeUsed()>=FREE_LIMIT){showPaywall('limit');return;}
+  const fear=document.getElementById('fearInput').value.trim(); if(!fear||loading) return;
+  if(isListening) stopMic();
+  loading=true; const btn=document.getElementById('goBtn'); btn.disabled=true;
+  document.getElementById('btnLabel').innerHTML='<span class="spinner"></span>';
+  document.getElementById('output').innerHTML=[0,1,2].map(()=>`<div class="skel-card"><div class="skel-line" style="width:80px;height:10px;margin-bottom:11px"></div><div class="skel-line" style="width:100%;height:13px;margin-bottom:8px"></div><div class="skel-line" style="width:88%;height:13px;margin-bottom:8px"></div><div class="skel-line" style="width:65%;height:13px"></div></div>`).join('');
+
+  const prompt=`You are a compassionate but practical communication coach.\n\nGive the user three things:\n1. REFRAME: A new way of seeing this fear (2-3 warm but direct sentences)\n2. ACTION: One specific thing they can do TODAY (1-2 sentences)\n3. MANTRA: A memorable phrase under 12 words\n\nOutput language: ${currentLangName} — respond entirely in ${currentLangName}\n\nRespond ONLY with valid JSON (no markdown):\n{"reframe":"...","action":"...","mantra":"..."}\n\nFear: ${fear}`;
+
+  try{
+    const res=await fetch('/api/reframe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fear,language:currentLangName})});
+    const parsed=await res.json();
+    document.getElementById('output').innerHTML=`<div class="results">
+      <div class="result-card"><div class="card-eyebrow ey-green">↺ Reframe</div><p class="card-text">${esc(parsed.reframe)}</p><button class="copy-btn" onclick="cp(this,'${esc2(parsed.reframe)}')">Copy</button></div>
+      <div class="result-card"><div class="card-eyebrow ey-purple">⚡ Action step for today</div><div class="action-box">${esc(parsed.action)}</div><button class="copy-btn" onclick="cp(this,'${esc2(parsed.action)}')">Copy</button></div>
+      <div class="result-card"><div class="card-eyebrow ey-amber">" Your mantra</div><p class="mantra-text">"${esc(parsed.mantra)}"</p><button class="copy-btn" onclick="cp(this,'${esc2(parsed.mantra)}')">Copy</button></div>
+    </div>`;
+    if(tier==='free'||tier==='none'){ incFreeUsed(); updateFreeUsage(); if(getFreeUsed()>=FREE_LIMIT){ setTimeout(()=>{ document.getElementById('output').insertAdjacentHTML('beforeend',`<div class="upgrade-nudge"><span class="nudge-text"><strong>Free limit reached.</strong> Upgrade for unlimited reframes, voice input &amp; 8 languages.</span><button class="nudge-btn" onclick="showPaywall('limit')">Upgrade — from $7/mo</button></div>`); },300); } }
+  }catch(e){ document.getElementById('output').innerHTML='<p style="color:var(--red);font-size:14px;margin-top:1rem">Something went wrong — please try again.</p>'; }
+  loading=false; btn.disabled=false; document.getElementById('btnLabel').textContent='Reframe my fear ↗';
+}
+
+function cp(btn,text){ navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000); }); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc2(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n'); }
+
+document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter') doReframe(); });
+document.getElementById('paywallOverlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) hidePaywall(); });
+document.getElementById('emailInput').addEventListener('keydown',e=>{ if(e.key==='Enter') startTrial(); });
+init();
+</script>
+</body>
+</html>
