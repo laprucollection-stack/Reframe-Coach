@@ -238,17 +238,16 @@ footer a{color:var(--ink-3)}
       </div>
     </div>
     <button class="subscribe-btn" id="subscribeBtn" onclick="redirectToStripe()"><span id="subscribeBtnLabel">Subscribe — $7/month</span></button>
-    <p class="paywall-note">7-day free trial · Cancel anytime · Secured by Stripe</p>
+    <p class="paywall-note">7-day free trial · Cancel anytime · Secure checkout by Lemon Squeezy</p>
   </div>
 </div>
 
 <footer><p>© 2025 Reframe · <a href="#">Privacy</a> · <a href="#">Terms</a> · Powered by Claude AI</p></footer>
 
 <script>
-// ── STRIPE CONFIG ─────────────────────────────────────────────────────
-const STRIPE_KEY           = 'pk_test_REPLACE_WITH_YOUR_KEY';
-const STRIPE_PRICE_STARTER = 'price_REPLACE_STARTER_PRICE_ID';
-const STRIPE_PRICE_PRO     = 'price_REPLACE_PRO_PRICE_ID';
+// ── LEMON CONFIG ─────────────────────────────────────────────────────
+const LEMON_STARTER_URL = 'https://laprucollection.lemonsqueezy.com/checkout/buy/bb77c778-c1c9-410c-a3a5-bbc3edb1aa77';
+const LEMON_PRO_URL     = 'https://laprucollection.lemonsqueezy.com/checkout/buy/5eb8a879-d76b-43f4-97e4-779113b72fa5';
 // ─────────────────────────────────────────────────────────────────────
 
 const FREE_LIMIT=3, TRIAL_DAYS=7;
